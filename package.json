@@ -1,0 +1,18 @@
+{
+  "name": "gulp_settings",
+  "version": "1.0.0",
+  "description": "Settings for gulping in Drupal theme.",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jesse Mutzebaugh",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-cached": "^1.1.0",
+    "gulp-cli": "^1.2.1",
+    "gulp-sass": "^2.3.1",
+    "gulp-sass-lint": "^1.1.1"
+  }
+}

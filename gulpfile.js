@@ -2,7 +2,8 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     autoprefixer = require('gulp-autoprefixer'),
     sassLint = require('gulp-sass-lint'),
-    cache = require('gulp-cached');
+    cache = require('gulp-cached'),
+    imagemin = require('gulp-imagemin');
 
 var sassFiles = [ 'sass/overrides/**/_*.scss' ];
 
@@ -23,16 +24,23 @@ gulp.task('sass', function () {
   .pipe(gulp.dest('css/'));
 });
 
+// Optimize Images
+gulp.task('imgOptim', function () {
+  gulp.src('images/*')
+  .pipe(imagemin())
+  .pipe(gulp.dest('dist/images'))
+});
+
 // #################
 // Check for errors.
 // #################
 gulp.task('lint:sass', function() {
   gulp.src(sassFiles)
     // Only check changed files
-    // .pipe(cache('sassLint'))
+    .pipe(cache('sassLint'))
     .pipe(sassLint())
     .pipe(sassLint.format())
-    .pipe(sassLint.failOnError())
+    // .pipe(sassLint.failOnError())
 });
 
 gulp.task('lint', ['lint:sass']);
@@ -55,4 +63,4 @@ gulp.task('watch:lint', function() {
 // Watch Both
 gulp.task('watch', ['watch:sass', 'watch:lint']);
 
-gulp.task('default', ['sass']);
+gulp.task('default', ['sass', 'imgOptim']);

@@ -1,6 +1,6 @@
 {
   "name": "gulp_settings",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Settings for gulping in Drupal theme.",
   "main": "gulpfile.js",
   "scripts": {

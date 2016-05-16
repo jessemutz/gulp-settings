@@ -3,9 +3,10 @@ var gulp = require('gulp'),
     autoprefixer = require('gulp-autoprefixer'),
     sassLint = require('gulp-sass-lint'),
     cache = require('gulp-cached'),
-    imagemin = require('gulp-imagemin');
+    imagemin = require('gulp-imagemin'),
+    livereload = require('gulp-livereload');
 
-var sassFiles = [ 'sass/overrides/**/_*.scss' ];
+var sassFiles = [ 'sass/**/*.scss' ];
 
 // Define which browsers to add vendor prefixes for.
 var options = {};
@@ -21,7 +22,8 @@ gulp.task('sass', function () {
  return gulp.src(sassFiles)
   .pipe(sass().on('error', sass.logError))
   .pipe(autoprefixer(options.autoprefixer))
-  .pipe(gulp.dest('css/'));
+  .pipe(gulp.dest('css/'))
+  .pipe(livereload());
 });
 
 // Optimize Images
@@ -37,7 +39,7 @@ gulp.task('imgOptim', function () {
 gulp.task('lint:sass', function() {
   gulp.src(sassFiles)
     // Only check changed files
-    .pipe(cache('sassLint'))
+    // .pipe(cache('sassLint'))
     .pipe(sassLint())
     .pipe(sassLint.format())
     // .pipe(sassLint.failOnError())
@@ -52,6 +54,7 @@ gulp.task('lint', ['lint:sass']);
 
 // Watch Sass
 gulp.task('watch:sass', function () {
+  livereload.listen();
   gulp.watch(sassFiles, ['sass']);
 });
 
@@ -61,6 +64,6 @@ gulp.task('watch:lint', function() {
 });
 
 // Watch Both
-gulp.task('watch', ['watch:sass', 'watch:lint']);
+gulp.task('watch', ['watch:sass', 'watch:lint',]);
 
 gulp.task('default', ['sass', 'imgOptim']);

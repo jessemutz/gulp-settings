@@ -1,10 +1,11 @@
-var gulp = require('gulp'),
-    sass = require('gulp-sass'),
-    autoprefixer = require('gulp-autoprefixer'),
-    sassLint = require('gulp-sass-lint'),
+var autoprefixer = require('gulp-autoprefixer'),
     cache = require('gulp-cached'),
+    gulp = require('gulp'),
     imagemin = require('gulp-imagemin'),
-    livereload = require('gulp-livereload');
+    livereload = require('gulp-livereload'),
+    sass = require('gulp-sass'),
+    sassLint = require('gulp-sass-lint'),
+    sourcemaps = require('gulp-sourcemaps');
 
 var sassFiles = [ 'sass/**/*.scss' ];
 
@@ -12,41 +13,46 @@ var sassFiles = [ 'sass/**/*.scss' ];
 var options = {};
 options.autoprefixer = {
   browsers: [
+    'last 2 versions',
     '> 1%',
-    'ie 9'
+    'ie 8'
   ]
 };
 
+// ##########################
+// Compile and opimize files.
+// ##########################
+
 // Compile SASS
+// ------------
 gulp.task('sass', function () {
  return gulp.src(sassFiles)
+  .pipe(sourcemaps.init())
   .pipe(sass().on('error', sass.logError))
   .pipe(autoprefixer(options.autoprefixer))
+  .pipe(sourcemaps.write('.'))
   .pipe(gulp.dest('css/'))
   .pipe(livereload());
 });
 
 // Optimize Images
+// ---------------
 gulp.task('imgOptim', function () {
   gulp.src('images/*')
   .pipe(imagemin())
-  .pipe(gulp.dest('dist/images'))
+  .pipe(gulp.dest('images'))
 });
 
-// #################
-// Check for errors.
-// #################
-gulp.task('lint:sass', function() {
+// Check for errors and best practices.
+// ------------------------------------
+gulp.task('lint', function() {
   gulp.src(sassFiles)
     // Only check changed files
-    // .pipe(cache('sassLint'))
+    .pipe(cache('sassLint'))
     .pipe(sassLint())
     .pipe(sassLint.format())
     // .pipe(sassLint.failOnError())
 });
-
-gulp.task('lint', ['lint:sass']);
-
 
 // ##############################
 // Watch for changes and rebuild.
@@ -60,7 +66,7 @@ gulp.task('watch:sass', function () {
 
 // Watch Lint
 gulp.task('watch:lint', function() {
-  gulp.watch(sassFiles, ['lint:sass']);
+  gulp.watch(sassFiles, ['lint']);
 });
 
 // Watch Both
